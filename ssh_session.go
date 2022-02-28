@@ -214,7 +214,7 @@ func (this *SSHSession) CheckSelf() bool {
 
 /**
  * 获取当前SSH到的交换机的品牌
- * @return string （huawei,h3c,cisco）
+ * @return string （huawei,h3c,cisco,ruijie）
  * @author shenbowei
  */
 func (this *SSHSession) GetSSHBrand() string {
@@ -239,6 +239,9 @@ func (this *SSHSession) GetSSHBrand() string {
 	} else if strings.Contains(result, CISCO) {
 		LogDebug("The switch brand is <cisco>.")
 		this.brand = CISCO
+	}else if strings.Contains(result, RUIJIE) {
+		LogDebug("The switch brand is <ruijie>.")
+		this.brand = RUIJIE
 	}
 	return this.brand
 }

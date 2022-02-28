@@ -9,10 +9,11 @@ import (
 const (
 	HUAWEI = "huawei"
 	H3C    = "h3c"
-	CISCO  = "cisco"
+	Cisco  = "cisco"
+	RUIJIE  = "ruijie"
 )
 
-var IsLogDebug = true
+var IsLogDebug = false
 
 /**
  * 外部调用的统一方法，完成获取会话（若不存在，则会创建连接和会话，并存放入缓存），执行指令的流程，返回执行结果
@@ -61,7 +62,7 @@ func RunCommandsWithBrand(user, password, ipPort, brand string, cmds ...string) 
 /**
  * 外部调用的统一方法，完成获取交换机的型号
  * @param user ssh连接的用户名, password 密码, ipPort 交换机的ip和端口
- * @return 设备品牌（huawei，h3c，cisco，""）和执行错误
+ * @return 设备品牌（huawei，h3c，ruijie，""）和执行错误
  * @author shenbowei
  */
 func GetSSHBrand(user, password, ipPort string) (string, error) {
