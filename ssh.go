@@ -9,7 +9,7 @@ import (
 const (
 	HUAWEI = "huawei"
 	H3C    = "h3c"
-	Cisco  = "cisco"
+	CISCO  = "cisco"
 	RUIJIE  = "ruijie"
 )
 
