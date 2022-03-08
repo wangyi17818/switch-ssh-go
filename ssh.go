@@ -92,7 +92,7 @@ func filterResult(result, firstCmd string) string {
 	promptStr := ""
 	for _, resultItem := range resultArray {
 		resultItem = strings.Replace(resultItem, " \b", "", -1)
-                resultItem = strings.Replace(resultItem, " \r", "", -1)
+                resultItem = strings.Replace(resultItem, "\r", "", -1)
 		if findCmd && (promptStr == "" || strings.Replace(resultItem, promptStr, "", -1) != "") {
 			filteredResult += resultItem + "\n"
 			continue
