@@ -204,7 +204,7 @@ func (this *SessionManager) getTimeoutSessionIndex() []string {
 	}()
 	for sessionKey, SSHSession := range this.sessionCache {
 		timeDuratime := time.Now().Sub(SSHSession.GetLastUseTime())
-		if timeDuratime.Minutes() > 10 {
+		if timeDuratime.Seconds() > 60 {
 			LogDebug("RunAutoClean close session<%s, unuse time=%s>", sessionKey, timeDuratime.String())
 			SSHSession.Close()
 			timeoutSessionIndex = append(timeoutSessionIndex, sessionKey)
