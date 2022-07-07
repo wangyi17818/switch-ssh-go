@@ -176,6 +176,9 @@ func (this *SessionManager) RunAutoClean() {
 			this.sessionCacheLocker.Lock()
 			for _, sessionKey := range timeoutSessionIndex {
 				this.LockSession(sessionKey)
+				this.sessionCache[sessionKey].session.Close()
+				close(this.sessionCache[sessionKey].in)
+				close(this.sessionCache[sessionKey].out)
 				delete(this.sessionCache, sessionKey)
 				this.UnlockSession(sessionKey)
 			}
