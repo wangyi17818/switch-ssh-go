@@ -9,7 +9,7 @@ var (
 	HuaweiNoPage = "screen-length 0 temporary"
 	H3cNoPage    = "screen-length disable"
 	CiscoNoPage  = "terminal length 0"
-	RuijieNoPage  = "terminal length 0"
+	RuijieNoPage = "terminal length 0"
 )
 
 var sessionManager = NewSessionManager()
@@ -66,14 +66,16 @@ func (this *SessionManager) GetSessionCache(sessionKey string) *SSHSession {
  */
 func (this *SessionManager) LockSession(sessionKey string) {
 	this.sessionLockerMapLocker.RLock()
+	defer this.sessionLockerMapLocker.RUnlock()
 	mutex, ok := this.sessionLocker[sessionKey]
-	this.sessionLockerMapLocker.RUnlock()
+
 	if !ok {
 		//如果获取不到锁，需要创建锁，主要更新锁存的时候需要上全局锁
 		mutex = new(sync.Mutex)
 		this.sessionLockerMapLocker.Lock()
+		defer this.sessionLockerMapLocker.Unlock()
 		this.sessionLocker[sessionKey] = mutex
-		this.sessionLockerMapLocker.Unlock()
+
 	}
 	mutex.Lock()
 }
@@ -85,8 +87,9 @@ func (this *SessionManager) LockSession(sessionKey string) {
  */
 func (this *SessionManager) UnlockSession(sessionKey string) {
 	this.sessionLockerMapLocker.RLock()
+	defer this.sessionLockerMapLocker.RUnlock()
 	this.sessionLocker[sessionKey].Unlock()
-	this.sessionLockerMapLocker.RUnlock()
+
 }
 
 /**
