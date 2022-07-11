@@ -10,7 +10,7 @@ const (
 	HUAWEI = "huawei"
 	H3C    = "h3c"
 	CISCO  = "cisco"
-	RUIJIE  = "ruijie"
+	RUIJIE = "ruijie"
 )
 
 var IsLogDebug = false
@@ -21,12 +21,12 @@ var IsLogDebug = false
  * @return 执行的输出结果和执行错误
  * @author shenbowei
  */
-func RunCommands(user, password, ipPort string, cmds ...string) (string, error) {
-	sessionKey := user + "_" + password + "_" + ipPort
+func RunCommands(nsid, user, password, ipPort string, cmds ...string) (string, error) {
+	sessionKey := user + "_" + password + "_" + ipPort + "_" + nsid
 	sessionManager.LockSession(sessionKey)
 	defer sessionManager.UnlockSession(sessionKey)
 
-	sshSession, err := sessionManager.GetSession(user, password, ipPort, "")
+	sshSession, err := sessionManager.GetSession(nsid, user, password, ipPort, "")
 	if err != nil {
 		LogError("GetSession error:%s", err)
 		return "", err
@@ -43,12 +43,12 @@ func RunCommands(user, password, ipPort string, cmds ...string) (string, error) 
  * @return 执行的输出结果和执行错误
  * @author shenbowei
  */
-func RunCommandsWithBrand(user, password, ipPort, brand string, cmds ...string) (string, error) {
-	sessionKey := user + "_" + password + "_" + ipPort
+func RunCommandsWithBrand(nsid, user, password, ipPort, brand string, cmds ...string) (string, error) {
+	sessionKey := user + "_" + password + "_" + ipPort + "_" + nsid
 	sessionManager.LockSession(sessionKey)
 	defer sessionManager.UnlockSession(sessionKey)
 
-	sshSession, err := sessionManager.GetSession(user, password, ipPort, brand)
+	sshSession, err := sessionManager.GetSession(nsid, user, password, ipPort, brand)
 	if err != nil {
 		LogError("GetSession error:%s", err)
 		return "", err
@@ -65,12 +65,12 @@ func RunCommandsWithBrand(user, password, ipPort, brand string, cmds ...string) 
  * @return 设备品牌（huawei，h3c，ruijie，""）和执行错误
  * @author shenbowei
  */
-func GetSSHBrand(user, password, ipPort string) (string, error) {
-	sessionKey := user + "_" + password + "_" + ipPort
+func GetSSHBrand(nsid, user, password, ipPort string) (string, error) {
+	sessionKey := user + "_" + password + "_" + ipPort + "_" + nsid
 	sessionManager.LockSession(sessionKey)
 	defer sessionManager.UnlockSession(sessionKey)
 
-	sshSession, err := sessionManager.GetSession(user, password, ipPort, "")
+	sshSession, err := sessionManager.GetSession(nsid, user, password, ipPort, "")
 	if err != nil {
 		LogError("GetSession error:%s", err)
 		return "", err
@@ -92,7 +92,7 @@ func filterResult(result, firstCmd string) string {
 	promptStr := ""
 	for _, resultItem := range resultArray {
 		resultItem = strings.Replace(resultItem, " \b", "", -1)
-                resultItem = strings.Replace(resultItem, "\r", "", -1)
+		resultItem = strings.Replace(resultItem, "\r", "", -1)
 		if findCmd && (promptStr == "" || strings.Replace(resultItem, promptStr, "", -1) != "") {
 			filteredResult += resultItem + "\n"
 			continue

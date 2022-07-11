@@ -66,16 +66,14 @@ func (this *SessionManager) GetSessionCache(sessionKey string) *SSHSession {
  */
 func (this *SessionManager) LockSession(sessionKey string) {
 	this.sessionLockerMapLocker.RLock()
-	defer this.sessionLockerMapLocker.RUnlock()
 	mutex, ok := this.sessionLocker[sessionKey]
-
+	this.sessionLockerMapLocker.RUnlock()
 	if !ok {
 		//如果获取不到锁，需要创建锁，主要更新锁存的时候需要上全局锁
 		mutex = new(sync.Mutex)
 		this.sessionLockerMapLocker.Lock()
-		defer this.sessionLockerMapLocker.Unlock()
 		this.sessionLocker[sessionKey] = mutex
-
+		this.sessionLockerMapLocker.Unlock()
 	}
 	mutex.Lock()
 }
@@ -98,8 +96,8 @@ func (this *SessionManager) UnlockSession(sessionKey string) {
  * @return 执行的错误
  * @author shenbowei
  */
-func (this *SessionManager) updateSession(user, password, ipPort, brand string) error {
-	sessionKey := user + "_" + password + "_" + ipPort
+func (this *SessionManager) updateSession(nsid, user, password, ipPort, brand string) error {
+	sessionKey := user + "_" + password + "_" + ipPort + "_" + nsid
 	mySession, err := NewSSHSession(user, password, ipPort)
 	if err != nil {
 		LogError("NewSSHSession err:%s", err.Error())
@@ -147,8 +145,8 @@ func (this *SessionManager) initSession(session *SSHSession, brand string) {
  * @return SSHSession
  * @author shenbowei
  */
-func (this *SessionManager) GetSession(user, password, ipPort, brand string) (*SSHSession, error) {
-	sessionKey := user + "_" + password + "_" + ipPort
+func (this *SessionManager) GetSession(nsid, user, password, ipPort, brand string) (*SSHSession, error) {
+	sessionKey := user + "_" + password + "_" + ipPort + "_" + nsid
 	session := this.GetSessionCache(sessionKey)
 	if session != nil {
 		//返回前要验证是否可用，不可用要重新创建并更新缓存
