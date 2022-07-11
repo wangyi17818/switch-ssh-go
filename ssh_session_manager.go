@@ -158,7 +158,7 @@ func (this *SessionManager) GetSession(nsid, user, password, ipPort, brand strin
 		LogDebug("Check session failed")
 	}
 	//如果不存在或者验证失败，需要重新连接，并更新缓存
-	if err := this.updateSession(user, password, ipPort, brand); err != nil {
+	if err := this.updateSession(nsid, user, password, ipPort, brand); err != nil {
 		LogError("SSH session pool updateSession err:%s", err.Error())
 		return nil, err
 	} else {
